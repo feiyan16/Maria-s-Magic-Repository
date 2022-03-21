@@ -2,6 +2,33 @@ import sys
 import csv
 
 
+class Colors:
+    HEADER = '\033[95m'
+    OKBLUE = '\033[94m'
+    OKGREEN = '\033[92m'
+    WARNING = '\033[93m'
+    FAIL = '\033[91m'
+    ENDC = '\033[0m'
+    BOLD = '\033[1m'
+    UNDERLINE = '\033[4m'
+
+
+def stdout(text):
+    return input(f"{Colors.OKBLUE}{text}{Colors.ENDC}")
+
+
+def stdok(text):
+    print(f"{Colors.OKGREEN}{Colors.BOLD}{text}{Colors.ENDC}")
+
+
+def stdwarn(text):
+    print(f"{Colors.WARNING}\tWARNING: {text}...{Colors.ENDC}")
+
+
+def stderr(text):
+    print(f"{Colors.FAIL}{Colors.BOLD}ERROR: {text}!{Colors.ENDC}")
+
+
 class Time:
     def __init__(self, date, hr, note):
         self.date = date
@@ -62,10 +89,10 @@ def read_csv(filename):
     try:
         print('Opening', filename, '...')
         file = open(filename)
-    except FileNotFoundError:
-        print('ERROR:', filename, 'cannot be found')
+    except FileNotFoundError as error:
+        stderr(error)
         sys.exit(0)
-    print(filename, 'Opened successfully!')
+    stdok(filename + ' opened successfully!')
     try:
         print('Reading', filename, '...')
         csv_reader = csv.reader(file)
@@ -75,10 +102,10 @@ def read_csv(filename):
         print('Reading rows...')
         for row in csv_reader:
             r.append(row)
-    except UnicodeDecodeError:
-        print('ERROR:', filename, 'in wrong encoding format')
+    except UnicodeDecodeError as error:
+        stderr(error)
         sys.exit(0)
-    print(filename, 'reading completed!')
+    stdok(filename + ' reading completed!')
     return h, r
 
 
@@ -86,20 +113,20 @@ def validate_hrs(hr):
     if '--' not in hr:
         return float(hr)
     else:
-        print('\tWARNING: This row has no hour, replacing hour value with 0')
+        stdwarn('This row has no hour, replacing hour value with 0')
         return 0
 
 
 def validate_proj(proj):
     if not proj:
-        print('\tWARNING: This row has no project, replacing project value with Loyalty-Methods Internal')
+        stdwarn('This row has no project, replacing project value with Loyalty-Methods Internal')
         return 'Loyalty-Methods Internal'
     return proj
 
 
 def validate_task(task):
     if not task:
-        print('\tWARNING: This row has no task, replacing task value with <No Task>')
+        stdwarn('This row has no task, replacing task value with <No Task>')
         return '<No Task>'
     return task
 
@@ -107,8 +134,9 @@ def validate_task(task):
 def create_employees(data):
     entry_list = {}
     print('Parsing employees...')
-    for row in data:
-        print('Parsing', row, '...')
+    for i in range(len(data)):
+        row = data[i]
+        print(f'PARSING ROW {i}: ', row, '...')
         emp_no = row[0].strip()
         name = row[1].strip()
         date = row[2].strip()
@@ -122,6 +150,7 @@ def create_employees(data):
             entry = entry_list.get(emp_no)
         else:
             entry = Employee(emp_no, name)
+            stdok(f'CREATED: {str(entry)} - EMP_NO.: {emp_no}')
             entry_list[emp_no] = entry
         if not date and not clk_in and not clk_out:
             entry.total = tot_hrs
@@ -143,6 +172,7 @@ def create_employees(data):
 
 
 def create_clients(data):
+    print('Creating clients...')
     dictionary = {}  # {client: {proj1: {task1: [], ..., taskN: []}, ..., projN: {task1: [], ..., taskN: []}}, ...}
     for e in data:
         employee = data.get(e)
@@ -168,6 +198,7 @@ def create_clients(data):
 
 
 def create_rows(c_data, e_data):
+    print('Creating rows for report...')
     array = []
     for client in c_data:
         show_client = True
@@ -202,6 +233,7 @@ def create_rows(c_data, e_data):
 
 
 def write_report(name, data):
+    print('Writing Report...')
     csvfile = open(name, 'w')
     csvwriter = csv.writer(csvfile)
     csvwriter.writerow(['', '', '', '', '',
@@ -222,17 +254,31 @@ def write_report(name, data):
         'Total'
     ])
     csvwriter.writerows(data)
+    stdok(f'Report written successfully as {name}')
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        print('Parameter missing: <timesheet file>')
+        stderr('Parameter missing: <timesheet file>')
         sys.exit(0)
     timesheet = sys.argv[1]
     headers, rows = read_csv(timesheet)
     employees = create_employees(rows)
+    stdok('Employees parsed successfully!\n')
+    if 'y' in stdout('Would you like to view employees? (y/n)').strip().lower():
+        for item in employees:
+            employees.get(item).display()
+    print()
     clients = create_clients(employees)
-    write_report('report.csv', create_rows(clients, employees))
+    stdok('Clients created successfully!\n')
+    rows = create_rows(clients, employees)
+    stdok('Rows created successfully!\n')
+    if 'y' in stdout('Would you like to view rows? (y/n)').strip().lower():
+        for item in rows:
+            print(item)
+    print()
+    write_report('report.csv', rows)
+
 
 # See PyCharm help at https://www.jetbrains.com/help/pycharm/
