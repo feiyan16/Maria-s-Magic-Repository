@@ -1,32 +1,6 @@
 import sys
 import csv
-
-
-class Colors:
-    HEADER = '\033[95m'
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-    ENDC = '\033[0m'
-    BOLD = '\033[1m'
-    UNDERLINE = '\033[4m'
-
-
-def stdout(text):
-    return input(f"{Colors.OKBLUE}{text}{Colors.ENDC}")
-
-
-def stdok(text):
-    print(f"{Colors.OKGREEN}{Colors.BOLD}{text}{Colors.ENDC}")
-
-
-def stdwarn(text):
-    print(f"{Colors.WARNING}\tWARNING: {text}...{Colors.ENDC}")
-
-
-def stderr(text):
-    print(f"{Colors.FAIL}{Colors.BOLD}ERROR: {text}!{Colors.ENDC}")
+import sys_color as write
 
 
 class Time:
@@ -90,9 +64,9 @@ def read_csv(filename):
         print('Opening', filename, '...')
         file = open(filename)
     except FileNotFoundError as error:
-        stderr(error)
+        write.stderr(error)
         sys.exit(0)
-    stdok(filename + ' opened successfully!')
+    write.stdok(filename + ' opened successfully!')
     try:
         print('Reading', filename, '...')
         csv_reader = csv.reader(file)
@@ -103,9 +77,9 @@ def read_csv(filename):
         for row in csv_reader:
             r.append(row)
     except UnicodeDecodeError as error:
-        stderr(error)
+        write.stderr(error)
         sys.exit(0)
-    stdok(filename + ' reading completed!')
+    write.stdok(filename + ' reading completed!')
     return h, r
 
 
@@ -113,20 +87,20 @@ def validate_hrs(hr):
     if '--' not in hr:
         return float(hr)
     else:
-        stdwarn('This row has no hour, replacing hour value with 0')
+        write.stdwarn('This row has no hour, replacing hour value with 0')
         return 0
 
 
 def validate_proj(proj):
     if not proj:
-        stdwarn('This row has no project, replacing project value with Loyalty-Methods Internal')
+        write.stdwarn('This row has no project, replacing project value with Loyalty-Methods Internal')
         return 'Loyalty-Methods Internal'
     return proj
 
 
 def validate_task(task):
     if not task:
-        stdwarn('This row has no task, replacing task value with <No Task>')
+        write.stdwarn('This row has no task, replacing task value with <No Task>')
         return '<No Task>'
     return task
 
@@ -150,7 +124,7 @@ def create_employees(data):
             entry = entry_list.get(emp_no)
         else:
             entry = Employee(emp_no, name)
-            stdok(f'CREATED: {str(entry)} - EMP_NO.: {emp_no}')
+            write.stdok(f'CREATED: {str(entry)} - EMP_NO.: {emp_no}')
             entry_list[emp_no] = entry
         if not date and not clk_in and not clk_out:
             entry.total = tot_hrs
@@ -254,27 +228,27 @@ def write_report(name, data):
         'Total'
     ])
     csvwriter.writerows(data)
-    stdok(f'Report written successfully as {name}')
+    write.stdok(f'Report written successfully as {name}')
 
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     if len(sys.argv) < 2:
-        stderr('Parameter missing: <timesheet file>')
+        write.stderr('Parameter missing: <timesheet file>')
         sys.exit(0)
     timesheet = sys.argv[1]
     headers, rows = read_csv(timesheet)
     employees = create_employees(rows)
-    stdok('Employees parsed successfully!\n')
-    if 'y' in stdout('Would you like to view employees? (y/n)').strip().lower():
+    write.stdok('Employees parsed successfully!\n')
+    if 'y' in write.stdout('Would you like to view employees? (y/n)').strip().lower():
         for item in employees:
             employees.get(item).display()
     print()
     clients = create_clients(employees)
-    stdok('Clients created successfully!\n')
+    write.stdok('Clients created successfully!\n')
     rows = create_rows(clients, employees)
-    stdok('Rows created successfully!\n')
-    if 'y' in stdout('Would you like to view rows? (y/n)').strip().lower():
+    write.stdok('Rows created successfully!\n')
+    if 'y' in write.stdout('Would you like to view rows? (y/n)').strip().lower():
         for item in rows:
             print(item)
     print()
