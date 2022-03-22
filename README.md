@@ -55,16 +55,16 @@
 * The program can pick up multiple invoices and products from that invoice. This means you can join all the invoices into one pdf and run the program with that joined pdf.
 * The program will tell you what page it is currently parsing and everytime a new invoice or product is found. Use these to check if the program is reading correctly
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/55895535/159568730-468cf340-ff3c-4515-b3cf-7e3831c3db05.png">
+  <img width="500" alt="image" src="https://user-images.githubusercontent.com/55895535/159568730-468cf340-ff3c-4515-b3cf-7e3831c3db05.png">
 
 * If you run the program more than once, the output file will not be overwritten with new content. New content will be added to the existing output file. Meaning, you should only run the program once.
 ## Errors:
 * This means that the program cannot find the pdf file, make sure that your file is in the same directory as the program .py file and that you've spelled the file name correctly.
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/55895535/159569939-338db501-f563-45df-b380-0b847919d952.png">
+  <img width="500" alt="image" src="https://user-images.githubusercontent.com/55895535/159569939-338db501-f563-45df-b380-0b847919d952.png">
 * This means that the pdf file you're using is in the wrong format, make sure that the file is in **.pdf** format
 
-<img width="500" alt="image" src="https://user-images.githubusercontent.com/55895535/159569868-764f9774-b6aa-46bb-8e70-26d06becd4a6.png">
+  <img width="500" alt="image" src="https://user-images.githubusercontent.com/55895535/159569868-764f9774-b6aa-46bb-8e70-26d06becd4a6.png">
 
 
 
