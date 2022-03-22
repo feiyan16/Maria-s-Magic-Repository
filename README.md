@@ -1,7 +1,7 @@
 # Bamboo HR Timesheet Reader
 ## Prerequisites:
 * Timesheet report(s) in **.csv** format **NOT** any excel extensions
-* python 3.9 or above installed on your computer, see https://www.python.org/doc/ on how to download and install python
+* python 3.8 or above installed on your computer, see https://www.python.org/doc/ on how to download and install python
 ## Set up & Run:
 1. Make sure all your files, bambooHR_time.py and .csv timesheet report(s), are in the same directory (aka folder)
    
@@ -41,7 +41,7 @@
 # Dell Invoice Reader
 ## Prerequisites:
 * Dell invoice from 2021 and later in **.pdf** format. **DO NOT** use any other formats
-* python 3.9 or above installed on your computer, see https://www.python.org/doc/ on how to download and install python
+* python 3.8 or above installed on your computer, see https://www.python.org/doc/ on how to download and install python
 * Package module, pdfplumber, installed. See https://pypi.org/project/pdfplumber/ on how to download and install
 ## Set up and Run
 1. Make sure you have all your files, dell_invoice_reader.py and pdf(s), in the same directory. 
