@@ -1,5 +1,5 @@
 # Bamboo HR Timesheet Reader
-## Prerequisites HELLO MARIA!:
+## Prerequisites:
 * Timesheet report(s) in **.csv** format **NOT** any excel extensions
 * python 3.8 or above installed on your computer, see https://www.python.org/doc/ on how to download and install python
 ## Set up & Run:
